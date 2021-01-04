@@ -1,6 +1,5 @@
 //DOM Elements
 const form = document.querySelector('form');
-const timer = document.querySelector('.timer');
 const hoursLabel = document.querySelector('.hours');
 const minutesLabel = document.querySelector('.minutes');
 const secondsLabel = document.querySelector('.seconds');
@@ -16,7 +15,7 @@ function formatTwoDigits(number) {
 
 /**
  * Transform seconds to hours, minutes and seconds
- * 
+ *
  * @param {Number} seconds - The total of seconds.
  */
 function formatSecond(totalSecond) {
@@ -37,27 +36,27 @@ function getSeconds () {
   const hours = Number(form.hours.value);
   const minutes = Number(form.minutes.value);
   const seconds = Number(form.seconds.value);
-  
+
   const hoursInSeconds = hours * SECONDS_IN_AN_HOUR;
   const minutesInSeconds = minutes * SECONDS_IN_AN_MINUTE;
-  
+
   return hoursInSeconds + minutesInSeconds + seconds;
 }
 
 /**
  * Initialize timer with the value provided by user.
- * 
- * @param {SubmiEvent} event 
+ *
+ * @param {SubmiEvent} event
  */
 function startTimer(event) {
   event.preventDefault();
   let totalSecond = getSeconds();
   formatSecond(totalSecond);
 
-  const intervelId = setInterval(() => {
+  const intervalId = setInterval(() => {
     totalSecond--;
     formatSecond(totalSecond);
-    if (!totalSecond) clearInterval(intervelId);
+    if (!totalSecond) clearInterval(intervalId);
   }, SECOND);
 }
 
