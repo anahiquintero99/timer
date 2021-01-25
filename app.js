@@ -3,11 +3,17 @@ const form = document.querySelector('form');
 const hoursLabel = document.querySelector('.hours');
 const minutesLabel = document.querySelector('.minutes');
 const secondsLabel = document.querySelector('.seconds');
+const btnStop = document.querySelector('.btn-stop');
+const btnSpause = document.querySelector('.btn-pause');
+
 
 //Enums
 const SECONDS_IN_AN_HOUR = 3600;
 const SECONDS_IN_AN_MINUTE = 60;
 const SECOND = 1000;
+
+let intervalId = null;
+let totalSecond = 0;
 
 function formatTwoDigits(number) {
   return number < 10 ? `0${number}` : number;
@@ -52,7 +58,7 @@ function getSeconds () {
  */
 function startTimer(event) {
   event.preventDefault();
-  let totalSecond = getSeconds();
+  totalSecond = getSeconds();
 
   if (!totalSecond) {
     alert('You need to set at least 1 second');
@@ -60,12 +66,39 @@ function startTimer(event) {
   }
 
   formatSecond(totalSecond);
+  clearIntervalId();
+  startInterval();
+}
 
-  const intervalId = setInterval(() => {
+function stopTimer() {
+  clearIntervalId();
+  totalSecond = 0;
+  formatSecond(totalSecond);
+}
+
+function pauseTimer() {
+  if (intervalId) {
+    clearIntervalId();
+    btnSpause.textContent = 'Continue';
+  } else {
+    btnSpause.textContent = 'Pause';
+    if (totalSecond) startInterval();
+  }
+}
+
+function clearIntervalId() {
+  clearInterval(intervalId);
+  intervalId = null;
+}
+
+function startInterval() {
+  intervalId = setInterval(() => {
     totalSecond--;
     formatSecond(totalSecond);
-    if (!totalSecond) clearInterval(intervalId);
+    if (!totalSecond) stopTimer();
   }, SECOND);
 }
 
 form.addEventListener('submit', startTimer);
+btnStop.addEventListener('click', stopTimer);
+btnSpause.addEventListener('click', pauseTimer);
