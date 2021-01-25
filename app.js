@@ -37,6 +37,8 @@ function getSeconds () {
   const minutes = Number(form.minutes.value);
   const seconds = Number(form.seconds.value);
 
+  if (!hours && !minutes && !seconds) return 0;
+
   const hoursInSeconds = hours * SECONDS_IN_AN_HOUR;
   const minutesInSeconds = minutes * SECONDS_IN_AN_MINUTE;
 
@@ -51,6 +53,12 @@ function getSeconds () {
 function startTimer(event) {
   event.preventDefault();
   let totalSecond = getSeconds();
+
+  if (!totalSecond) {
+    alert('You need to set at least 1 second');
+    return;
+  }
+
   formatSecond(totalSecond);
 
   const intervalId = setInterval(() => {
