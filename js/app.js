@@ -13,7 +13,9 @@ const SECONDS_IN_AN_MINUTE = 60;
 const SECOND = 1000;
 
 let intervalId = null;
-let totalSecond = 0;
+let totalSecondsRemaining = 0;
+let progressBar = null;
+let totalSeconds = 0;
 
 function formatTwoDigits(number) {
   return number < 10 ? `0${number}` : number;
@@ -58,22 +60,22 @@ function getSeconds () {
  */
 function startTimer(event) {
   event.preventDefault();
-  totalSecond = getSeconds();
+  totalSeconds = totalSecondsRemaining = getSeconds();
 
-  if (!totalSecond) {
+  if (!totalSecondsRemaining) {
     alert('You need to set at least 1 second');
     return;
   }
 
-  formatSecond(totalSecond);
+  formatSecond(totalSecondsRemaining);
   clearIntervalId();
   startInterval();
 }
 
 function stopTimer() {
   clearIntervalId();
-  totalSecond = 0;
-  formatSecond(totalSecond);
+  totalSecondsRemaining = 0;
+  formatSecond(totalSecondsRemaining);
 }
 
 function pauseTimer() {
@@ -82,7 +84,7 @@ function pauseTimer() {
     btnSpause.textContent = 'Continue';
   } else {
     btnSpause.textContent = 'Pause';
-    if (totalSecond) startInterval();
+    if (totalSecondsRemaining) startInterval();
   }
 }
 
@@ -93,10 +95,24 @@ function clearIntervalId() {
 
 function startInterval() {
   intervalId = setInterval(() => {
-    totalSecond--;
-    formatSecond(totalSecond);
-    if (!totalSecond) stopTimer();
+    totalSecondsRemaining--;
+    formatSecond(totalSecondsRemaining);
+    drawProgressBar();
+    if (!totalSecondsRemaining) stopTimer();
   }, SECOND);
+}
+
+function drawProgressBar() {
+  if (!progressBar) {
+    progressBar = new ProgressBar.Circle('.progress-bar-custom', {
+      color: '#14caf0',
+      duration: 100,
+      strokeWidth: 10,
+      fill: '#f8f9fa',
+    });
+  }
+  const progress = totalSecondsRemaining / totalSeconds;
+  progressBar.animate(progress);
 }
 
 form.addEventListener('submit', startTimer);
